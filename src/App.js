@@ -1,23 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import ProfileList from './components/ProfileList';
+import profileData from './data/profiles.json'; // Assuming the JSON file is located here
 
 function App() {
+  const [profiles, setProfiles] = useState(profileData);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredProfiles = profiles.filter((profile) => {
+    const searchText = searchQuery.toLowerCase();
+    return (
+      profile.name.toLowerCase().includes(searchText) ||
+      profile.description.toLowerCase().includes(searchText) ||
+      profile.address.toLowerCase().includes(searchText)
+    );
+  });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Profile Explorer</h1>
+      <input
+        type="text"
+        placeholder="Search profiles..."
+        value={searchQuery}
+        onChange={handleSearchChange}
+      />
+      <ProfileList profiles={filteredProfiles} setProfiles={setProfiles} />
     </div>
   );
 }
